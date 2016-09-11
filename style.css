@@ -1,8 +1,8 @@
-html, body, header, nav, h1, h2, h3, h4, h5, h6, a,
-ul, li, strong, main, button, i,
+html, body, header, h3, h4, a,
+ul, li, main, button, i,
 section, img, div, p, form,
 fieldset, label, input, textarea, select,
-span, article, footer, time, small {
+span {
   margin: 0;
   padding: 0;
   border: 0;
