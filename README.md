@@ -1,4 +1,4 @@
-#SF Film locations
+#SF Film Locations
 
 ##Usage
 Clone or download the repository and execute
