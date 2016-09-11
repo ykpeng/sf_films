@@ -7,7 +7,7 @@ const ResultStore = require('../stores/result_store');
 const App = React.createClass({
   getInitialState(){
     return {
-      results: ResultStore.all()
+      results: []
     };
   },
 
@@ -24,7 +24,7 @@ const App = React.createClass({
   },
 
   filmDetail() {
-    if (Object.keys(this.state.results).length > 0) {
+    if (this.state.results.length > 0) {
       return (
         <FilmDetail film={this.state.results[0]}/>
       );
@@ -33,14 +33,18 @@ const App = React.createClass({
 
   render(){
     return(
-      <div>
-        <SearchBar/>
-        { this.filmDetail() }
+      <div className="content-main">
+        <section className="content-left">
+          <SearchBar/>
+          { this.filmDetail() }
+        </section>
+        <section className="content-right">
+          <FilmMap results={this.state.results}/>
+        </section>
       </div>
     )
   }
 });
 
-{/*<FilmMap results = {results}/>*/}
 
 module.exports = App;

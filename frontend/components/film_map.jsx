@@ -1,14 +1,5 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-// const SearchActions = require('../actions/search_actions');
-const hashHistory = require('react-router').hashHistory;
-
-const _getCoordsObj = function(latLng) {
-  return ({
-    lat: latLng.lat(),
-    lng: latLng.lng()
-  });
-}
 
 const mapOptions = {
   center: {lat: 37.773972, lng: -122.431297}, //San Francisco
@@ -19,81 +10,66 @@ const FilmMap = React.createClass({
   componentDidMount() {
     const map = ReactDOM.findDOMNode(this.refs.map);
     this.map = new google.maps.Map(map, mapOptions);
+    this.geocoder = new google.maps.Geocoder();
+  },
+
+  resetMarkers(){
+    this.clearMarkers();
+    this.props.results.forEach(result => {
+      this.searchAddress(result);
+    })
+  },
+
+  clearMarkers(){
+    this.markers = this.markers || [];
+    this.markers.forEach(marker => {
+      marker.setMap(null);
+    })
     this.markers = [];
-    this.registerListeners();
-    this._onChange();
   },
 
-  markersToRemove(){
-    return this.markers.filter( marker => {
-      return !this.props.films.hasOwnProperty(marker.filmId);
-    });
-  },
-
-  filmsToAdd(){
-    const currentFilmIds = this.markers.map( marker => marker.filmId );
-    const newFilms = this.props.films;
-    const newFilmIds = Object.keys(newFilms);
-
-    return newFilmIds.reduce( (collection, filmId) => {
-      if (!currentFilmIds.includes(filmId)) {
-        return ( collection.concat( [newFilmes[filmId]] ));
+  searchAddress(result){
+    let pos;
+    let that = this;
+    this.geocoder.geocode({ address: result.locations, componentRestrictions: { locality: "San Francisco"} }, function(response, status){
+      if (status === google.maps.GeocoderStatus.OK) {
+        console.log(response);
+        pos = response[0].geometry.location;
+        that.setSingleMarker(result, pos);
+      } else {
+        console.log("The Geocode was not successful for the following reason: " + status);
       }
-    }, [] );
+    })
   },
 
-  componentDidUpdate() {
-    this._onChange();
-  },
-
-  _onChange() {
-    this.filmsToAdd().forEach(this.createMarkerFromFilm);
-    this.markersToRemove().forEach(this.removeMarker);
-  },
-
-  // _handleClick(coords) {
-  //   hashHistory.push({
-  //     pathname: "films/new",
-  //     query: coords
-  //   });
-  // },
-
-  registerListeners() {
-    const that = this;
-    google.maps.event.addListener(this.map, 'idle', () => {
-      const mapBounds = that.map.getBounds();
-      const northEast = _getCoordsObj(mapBounds.getNorthEast());
-      const southWest = _getCoordsObj(mapBounds.getSouthWest());
-      const bounds = { northEast, southWest };
-      // SearchActions.updateBounds(bounds);
+  setSingleMarker(result, pos) {
+    const marker = new google.maps.Marker({
+      position: pos,
+      map: this.map
     });
-    google.maps.event.addListener(this.map, 'click', event => {
-      const coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-      that._handleClick(coords);
+
+    let contentString = `<div>${result.locations}</div>`;
+    if (result.fun_facts) {
+      contentString += `<div>${result.fun_facts}</div>`;
+    };
+
+    const infowindow = new google.maps.InfoWindow({
+      content: contentString
     });
-  },
 
-  // createMarkerFromFilm(film) {
-  //   const pos = new google.maps.LatLng(film.lat, film.lng);
-  //   const marker = new google.maps.Marker({
-  //     position: pos,
-  //     map: this.map,
-  //     filmId: film.id
-  //   });
-  //   marker.addListener('click', () => {
-  //     hashHistory.push("films/" + film.id );
-  //   });
-  //   this.markers.push(marker);
-  // },
+    marker.addListener('click', function() {
+      infowindow.open(this.map, marker);
+    });
 
-  removeMarker(marker) {
-    const idx = this.markers.indexOf( marker );
-    this.markers[idx].setMap(null);
-    this.markers.splice(idx, 1);
+    this.markers.push(marker);
   },
 
   render() {
-    return ( <div className="map" ref="map">Map</div>);
+    this.resetMarkers();
+    return (
+      <div className="map" ref="map">
+      </div>
+    );
   }
 });
 

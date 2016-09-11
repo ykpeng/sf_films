@@ -1,12 +1,21 @@
-/*.film-detail {
-  display: flex;
-  flex-direction: column;
-}*/
-
 body {
   margin: 25px;
 }
 
-p {
-  display: block;
+.content-main {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content-left {
+  width: 50%;
+}
+
+.content-right {
+  width: 50%;
+}
+
+.map {
+  width: 500px;
+  height: 500px;
 }

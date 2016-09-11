@@ -4,10 +4,10 @@ const Dispatcher = require('../dispatcher/dispatcher');
 
 const ResultStore = new Store(Dispatcher);
 
-let _results = {};
+let _results = [];
 
 ResultStore.all = function() {
-  return Object.assign({}, _results);
+  return _results;
 }
 
 function resetResults(results) {
