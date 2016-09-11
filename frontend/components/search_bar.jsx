@@ -25,14 +25,17 @@ const SearchBar = React.createClass({
   },
 
   handleInputChange(e){
-    this.setState({ query: e.target.value }, this.updateMatches);
+    this.setState({
+      query: e.target.value,
+      focusedIdx: 0,
+    }, this.updateMatches);
   },
 
   updateMatches(){
     if (this.state.query !== "") {
       MatchActions.fetchMatches((this.state.query).toLowerCase());
     } else {
-      this.setState({ matches: new Set() });
+      this.setState({ matches: [] });
     }
   },
 
@@ -40,13 +43,24 @@ const SearchBar = React.createClass({
     ResultActions.fetchResults(match);
     this.setState({
       query: "",
-      matches: new Set()
+      matches: [],
+      focusedIdx: 0
     })
   },
 
-  handleKeyPress(e) {
-    if (e.key === "Enter") {
-      this.handleClick(this.state.matches[focusedIdx]);
+  handleKeyDown(e) {
+    if (e.keyCode === 13 || e.keyCode === 39) {
+      this.handleClick(this.state.matches[this.state.focusedIdx]);
+    } else if (e.keyCode === 38) {
+      if (this.state.focusedIdx > 0) {
+        let focusedIdx = this.state.focusedIdx - 1;
+        this.setState({ focusedIdx: focusedIdx });
+      }
+    } else if (e.keyCode === 40) {
+      if (this.state.focusedIdx < this.state.matches.length - 1) {
+        let focusedIdx = this.state.focusedIdx + 1;
+        this.setState({ focusedIdx: focusedIdx })
+      }
     }
   },
 
@@ -57,10 +71,14 @@ const SearchBar = React.createClass({
       return (
         <ul className="search-results">
           { matches.map( (match, i) => {
+            let focused = "";
+            if (i === this.state.focusedIdx) {
+              focused += " focused"
+            }
             return (
               <li onClick={this.handleClick.bind(this, match)}
                   key={i}
-                  className="search-result"
+                  className={"search-result" + focused}
                   value={match}>
                 <p>{match}</p>
               </li>
@@ -78,7 +96,7 @@ const SearchBar = React.createClass({
           <i className="fa fa-search" aria-hidden="true"></i>
           <input type="text"
                  onInput={this.handleInputChange}
-                 onKeyPress={this.handleKeyPress}
+                 onKeyDown={this.handleKeyDown}
                  placeholder="Search Movie Title"
                  value={this.state.query}/>
         </div>
