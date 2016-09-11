@@ -76,8 +76,7 @@ const FilmMap = React.createClass({
   render() {
     this.resetMarkers();
     return (
-      <div className="map" ref="map">
-      </div>
+      <div className="map" ref="map"></div>
     );
   }
 });
