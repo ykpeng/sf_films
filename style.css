@@ -1,0 +1,12 @@
+/*.film-detail {
+  display: flex;
+  flex-direction: column;
+}*/
+
+body {
+  margin: 25px;
+}
+
+p {
+  display: block;
+}
