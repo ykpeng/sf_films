@@ -8,7 +8,7 @@ const MatchApiUtil = {
       success(response){
         let matches = new Set();
         response.forEach((match) => {
-          matches.add(match.title);
+          matches.add(match.title.trim());
         })
         cb(matches);
       }

@@ -7,7 +7,7 @@ const MatchStore = new Store(Dispatcher);
 let _matches = new Set();
 
 MatchStore.all = function() {
-  return _matches;
+  return Array.from(_matches);
 }
 
 function resetMatches(matches) {

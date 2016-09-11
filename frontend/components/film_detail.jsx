@@ -5,17 +5,26 @@ const FilmDetail = React.createClass({
     let film = this.props.film;
     return(
       <div className="film-detail">
-        <p>Title: {film.title}</p>
-        <p>Release year: {film.release_year}</p>
-        <p>Production company: {film.production_company}</p>
-        <p>Distributor: {film.distributor}</p>
-        <p>Director: {film.director}</p>
-        <p>Writer: {film.writer}</p>
+        <h3>{film.title} ({film.release_year})</h3>
 
-        <p>Actors:</p>
-        <p>{film.actor_1}</p>
-        <p>{film.actor_2}</p>
-        <p>{film.actor_3}</p>
+        <h4>Production company</h4>
+        <p>{film.production_company}</p>
+
+        <h4>Distributor</h4>
+        <p>{film.distributor}</p>
+
+        <h4>Director</h4>
+        <p>{film.director}</p>
+
+        <h4>Writer</h4>
+        <p>{film.writer}</p>
+
+        <h4>Actor(s)</h4>
+        <ul>
+          <li>{film.actor_1}</li>
+          <li>{film.actor_2}</li>
+          <li>{film.actor_3}</li>
+        </ul>
       </div>
     )
   }

@@ -30,12 +30,11 @@ const FilmMap = React.createClass({
 
   searchAddress(result){
     let pos;
-    let that = this;
+    let self = this;
     this.geocoder.geocode({ address: result.locations, componentRestrictions: { locality: "San Francisco"} }, function(response, status){
       if (status === google.maps.GeocoderStatus.OK) {
-        console.log(response);
         pos = response[0].geometry.location;
-        that.setSingleMarker(result, pos);
+        self.setSingleMarker(result, pos);
       } else {
         console.log("The Geocode was not successful for the following reason: " + status);
       }
@@ -43,22 +42,28 @@ const FilmMap = React.createClass({
   },
 
   setSingleMarker(result, pos) {
+    let self = this;
     const marker = new google.maps.Marker({
       position: pos,
       map: this.map
     });
 
-    let contentString = `<div>${result.locations}</div>`;
+    let contentString = `<h4>Shoot location</h4><p>${result.locations}</p>`;
+
     if (result.fun_facts) {
-      contentString += `<div>${result.fun_facts}</div>`;
+      contentString += `<h4>Fun fact</h4><p>${result.fun_facts}</p>`;
     };
 
-    const infowindow = new google.maps.InfoWindow({
+    marker.infowindow = new google.maps.InfoWindow({
       content: contentString
     });
 
     marker.addListener('click', function() {
-      infowindow.open(this.map, marker);
+      if (self.currMarker) {
+        self.currMarker.infowindow.close();
+      }
+      marker.infowindow.open(this.map, marker);
+      self.currMarker = marker;
     });
 
     this.markers.push(marker);

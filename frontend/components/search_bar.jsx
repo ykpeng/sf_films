@@ -7,7 +7,8 @@ const SearchBar = React.createClass({
   getInitialState(){
     return {
       query: "",
-      matches: new Set()
+      matches: [],
+      focusedIdx: 0
     };
   },
 
@@ -29,7 +30,7 @@ const SearchBar = React.createClass({
 
   updateMatches(){
     if (this.state.query !== "") {
-      MatchActions.fetchMatches(this.state.query);
+      MatchActions.fetchMatches((this.state.query).toLowerCase());
     } else {
       this.setState({ matches: new Set() });
     }
@@ -43,28 +44,46 @@ const SearchBar = React.createClass({
     })
   },
 
-  render(){
-    let matches = Array.from(this.state.matches);
-    return(
-      <aside>
-        <div>
-          <input type="text"
-                 onInput={this.handleInputChange}
-                 placeholder="Search Movie Title"
-                 value={this.state.query}/>
-        </div>
+  handleKeyPress(e) {
+    if (e.key === "Enter") {
+      this.handleClick(this.state.matches[focusedIdx]);
+    }
+  },
 
-        <ul>
+  searchResults() {
+    let matches = this.state.matches;
+
+    if (matches.length > 0) {
+      return (
+        <ul className="search-results">
           { matches.map( (match, i) => {
             return (
               <li onClick={this.handleClick.bind(this, match)}
                   key={i}
+                  className="search-result"
                   value={match}>
-                {match}
+                <p>{match}</p>
               </li>
             )
           }) }
         </ul>
+      )
+    }
+  },
+
+  render(){
+    return(
+      <aside>
+        <div>
+          <i className="fa fa-search" aria-hidden="true"></i>
+          <input type="text"
+                 onInput={this.handleInputChange}
+                 onKeyPress={this.handleKeyPress}
+                 placeholder="Search Movie Title"
+                 value={this.state.query}/>
+        </div>
+
+        { this.searchResults() }
 
       </aside>
     );
