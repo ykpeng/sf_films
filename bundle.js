@@ -21531,13 +21531,16 @@
 	  },
 	  handleKeyDown: function handleKeyDown(e) {
 	    if (e.keyCode === 13 || e.keyCode === 39) {
+	      //enter or right arrow
 	      this.handleClick(this.state.matches[this.state.focusedIdx]);
 	    } else if (e.keyCode === 38) {
 	      if (this.state.focusedIdx > 0) {
+	        //up arrow
 	        var focusedIdx = this.state.focusedIdx - 1;
 	        this.setState({ focusedIdx: focusedIdx });
 	      }
 	    } else if (e.keyCode === 40) {
+	      //down arrow
 	      if (this.state.focusedIdx < this.state.matches.length - 1) {
 	        var _focusedIdx = this.state.focusedIdx + 1;
 	        this.setState({ focusedIdx: _focusedIdx });
@@ -28639,11 +28642,10 @@
 	    this.markers = [];
 	  },
 	  searchAddress: function searchAddress(result) {
-	    var pos = void 0;
 	    var self = this;
 	    this.geocoder.geocode({ address: result.locations, componentRestrictions: { locality: "San Francisco" } }, function (response, status) {
 	      if (status === google.maps.GeocoderStatus.OK) {
-	        pos = response[0].geometry.location;
+	        var pos = response[0].geometry.location;
 	        self.setSingleMarker(result, pos);
 	      } else {
 	        console.log("The Geocode was not successful for the following reason: " + status);

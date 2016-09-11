@@ -29,11 +29,10 @@ const FilmMap = React.createClass({
   },
 
   searchAddress(result){
-    let pos;
     let self = this;
-    this.geocoder.geocode({ address: result.locations, componentRestrictions: { locality: "San Francisco"} }, function(response, status){
+    this.geocoder.geocode({ address: result.locations, componentRestrictions: { locality: "San Francisco" } }, function(response, status){
       if (status === google.maps.GeocoderStatus.OK) {
-        pos = response[0].geometry.location;
+        let pos = response[0].geometry.location;
         self.setSingleMarker(result, pos);
       } else {
         console.log("The Geocode was not successful for the following reason: " + status);

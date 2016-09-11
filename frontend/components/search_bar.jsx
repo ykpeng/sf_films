@@ -49,14 +49,14 @@ const SearchBar = React.createClass({
   },
 
   handleKeyDown(e) {
-    if (e.keyCode === 13 || e.keyCode === 39) {
+    if (e.keyCode === 13 || e.keyCode === 39) { //enter or right arrow
       this.handleClick(this.state.matches[this.state.focusedIdx]);
     } else if (e.keyCode === 38) {
-      if (this.state.focusedIdx > 0) {
+      if (this.state.focusedIdx > 0) { //up arrow
         let focusedIdx = this.state.focusedIdx - 1;
         this.setState({ focusedIdx: focusedIdx });
       }
-    } else if (e.keyCode === 40) {
+    } else if (e.keyCode === 40) { //down arrow
       if (this.state.focusedIdx < this.state.matches.length - 1) {
         let focusedIdx = this.state.focusedIdx + 1;
         this.setState({ focusedIdx: focusedIdx })
