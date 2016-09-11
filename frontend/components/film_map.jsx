@@ -48,7 +48,11 @@ const FilmMap = React.createClass({
       map: this.map
     });
 
-    let contentString = `<h4>Shoot location</h4><p>${result.locations}</p>`;
+    let contentString = "";
+
+    if (result.locations) {
+      contentString += `<h4>Shoot location</h4><p>${result.locations}</p>`;
+    };
 
     if (result.fun_facts) {
       contentString += `<h4>Fun fact</h4><p>${result.fun_facts}</p>`;
